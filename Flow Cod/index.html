@@ -1,0 +1,2523 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head></head><body><div id="in-page-channel-node-id" data-channel-name="in_page_channel_i4Q6c9"></div><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlowExternals</title>
+    <link href="fonts.googleapis.com/css2" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+
+            /* Hide scrollbar for Chrome, Safari and Opera */
+            &amp;::-webkit-scrollbar {
+                display: none;
+            }
+
+            /* Hide scrollbar for IE, Edge and Firefox */
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        :root {
+            --primary: #06b6d4;
+            --primary-light: #22d3ee;
+            --primary-dark: #0891b2;
+            --primary-soft: rgba(6, 182, 212, 0.1);
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-primary: #0f172a;
+            --bg-surface: #1e293b;
+            --bg-elevated: #334155;
+            --bg-sidebar: #020617;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-light: #94a3b8;
+            --text-white: #ffffff;
+            --border-light: rgba(255, 255, 255, 0.1);
+            --border-focus: #06b6d4;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.02);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.12);
+            --shadow-focus: 0 0 0 4px rgba(6, 182, 212, 0.15);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            background-image: radial-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px);
+            background-size: 10px 10px;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            color: var(--text-primary);
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before,
+        body::after {
+            content: '';
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.12) 0%, transparent 70%);
+            z-index: -2;
+            filter: blur(80px);
+            pointer-events: none;
+            animation: float 25s infinite alternate ease-in-out;
+        }
+
+        body::before {
+            top: -150px;
+            left: -150px;
+        }
+
+        body::after {
+            bottom: -150px;
+            right: -150px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, transparent 70%);
+            animation-delay: -12s;
+        }
+
+        /* Mouse Reactive Spotlight */
+        #cursor-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle at center, rgba(6, 182, 212, 0.08) 0%, transparent 60%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+            transform: translate(-50%, -50%);
+            transition: transform 0.15s ease-out;
+            filter: blur(40px);
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(150px, 80px) rotate(45deg);
+            }
+        }
+
+        /* Main Container */
+        .app-container {
+            width: 100%;
+            max-width: 1280px;
+            background: var(--bg-surface);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            overflow: hidden;
+            height: 850px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--bg-sidebar);
+            padding: 32px 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo-area {
+            padding: 0 12px;
+            margin-bottom: 48px;
+        }
+
+        .logo {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-white);
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            background: linear-gradient(90deg, #fff, var(--primary-light), #fff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 4s linear infinite;
+        }
+
+        @keyframes shimmer {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        .logo-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 15px var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover .logo-dot {
+            transform: scale(1.5);
+            box-shadow: 0 0 25px var(--primary-light);
+            background: var(--primary-light);
+        }
+
+        .logo-sub {
+            display: none;
+        }
+
+        /* Navigation Items */
+        .nav-menu {
+            flex: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            margin: 4px 0;
+            border-radius: var(--radius-lg);
+            color: var(--text-light);
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-white);
+        }
+
+        .nav-item.active {
+            background: var(--primary);
+            color: var(--text-white);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-item svg {
+            width: 22px;
+            height: 22px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        /* Status in Sidebar */
+        .system-status {
+            padding: 20px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius-lg);
+            margin-top: 20px;
+        }
+
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+
+        .status-label {
+            color: var(--text-light);
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-white);
+            font-weight: 500;
+        }
+
+        .badge-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .badge-dot.online {
+            background: var(--success);
+            box-shadow: 0 0 15px var(--success);
+        }
+
+        .badge-dot.online::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border: 1px solid var(--success);
+            border-radius: 50%;
+            animation: radar 2s infinite;
+            opacity: 0;
+        }
+
+        @keyframes radar {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(2.5);
+                opacity: 0;
+            }
+        }
+
+        .badge-dot.offline {
+            background: var(--danger);
+        }
+
+        /* Main Content */
+        .main-content {
+            background: var(--bg-primary);
+            padding: 32px 36px;
+            overflow-y: auto;
+        }
+
+        /* Header */
+        .content-header {
+            margin-bottom: 32px;
+        }
+
+        .content-header h2 {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .content-header .breadcrumb {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Premium Tab Entrance Animation */
+        @keyframes tabEntrance {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.98) rotateX(-5deg);
+                filter: blur(10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1) rotateX(0deg);
+                filter: blur(0);
+            }
+        }
+
+        @keyframes cardPop {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.9) rotateX(-10deg);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1) rotateX(0deg);
+            }
+        }
+
+        .tab-content {
+            display: none;
+            perspective: 1000px;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: tabEntrance 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .tab-content.active .card {
+            animation: cardPop 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+        }
+
+        .tab-content.active .card:nth-child(1) { animation-delay: 0.1s; }
+        .tab-content.active .card:nth-child(2) { animation-delay: 0.2s; }
+        .tab-content.active .card:nth-child(3) { animation-delay: 0.3s; }
+        .tab-content.active .card:nth-child(4) { animation-delay: 0.4s; }
+
+        /* Cards */
+        .card {
+            background: var(--bg-surface);
+            border-radius: var(--radius-xl);
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px var(--primary-light);
+            transform: translateY(-4px);
+            background: rgba(30, 41, 59, 0.8);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title span {
+            width: 4px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        /* Form Elements */
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .form-row:last-child {
+            border-bottom: none;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 15px;
+        }
+
+        .form-label .hint {
+            color: var(--text-light);
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        /* Toggle Switch */
+        .toggle {
+            position: relative;
+            display: inline-block;
+            width: 56px;
+            height: 30px;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #1e293b;
+            transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border-radius: 34px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            overflow: visible;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            top: 3px;
+            background-color: #94a3b8;
+            transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+            z-index: 2;
+        }
+
+        input:checked+.toggle-slider {
+            background-color: rgba(6, 182, 212, 0.2);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+        }
+
+        input:checked+.toggle-slider:before {
+            transform: translateX(26px);
+            background-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .toggle:hover .toggle-slider {
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .toggle:hover .toggle-slider:before {
+            filter: brightness(1.2);
+        }
+
+        /* Range Slider */
+        .range-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 200px;
+            height: 12px;
+            background: var(--bg-elevated);
+            border-radius: 6px;
+            outline: none;
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 0;
+            height: 0;
+            cursor: pointer;
+            box-shadow: -200px 0 0 200px var(--primary);
+        }
+
+        .range-value {
+            background: var(--primary);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            min-width: 60px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+        }
+
+        /* Select & Input */
+        .select-modern {
+            background: var(--bg-elevated);
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 14px 18px;
+            font-size: 15px;
+            color: var(--text-primary);
+            width: 100%;
+            outline: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .select-modern:focus {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-focus);
+        }
+
+        .input-modern {
+            background: var(--bg-elevated);
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 14px 18px;
+            font-size: 15px;
+            color: var(--text-primary);
+            width: 100%;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .input-modern:focus {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-focus);
+        }
+
+        /* Premium Sub-Tabs */
+        .sub-nav {
+            position: relative;
+            display: flex;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+            padding: 6px;
+            border-radius: 16px;
+            margin: 12px 24px 28px 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .sub-nav-item {
+            position: relative;
+            flex: 1;
+            text-align: center;
+            padding: 10px 0;
+            cursor: pointer;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            z-index: 2;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sub-nav-item:hover {
+            color: var(--text-primary);
+            transform: translateY(-1px);
+        }
+
+        .sub-nav-item:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .sub-nav-item.active {
+            color: #fff;
+            text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+        }
+
+        .sub-nav::after {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: calc(33.33% - 8px);
+            height: calc(100% - 12px);
+            background: linear-gradient(135deg, var(--primary) 0%, #0891b2 100%);
+            border-radius: 10px;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .sub-nav:has(.sub-nav-item:nth-child(1).active)::after { transform: translateX(0); }
+        .sub-nav:has(.sub-nav-item:nth-child(2).active)::after { transform: translateX(100%); }
+        .sub-nav:has(.sub-nav-item:nth-child(3).active)::after { transform: translateX(200%); }
+
+        .sub-nav .sub-nav-item.active {
+            background: none !important;
+            box-shadow: none !important;
+        }
+
+        .sub-tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .sub-tab-content.active {
+            display: block;
+        }
+
+        /* Custom Dropdown */
+        .custom-dropdown {
+            position: relative;
+            width: 100%;
+            user-select: none;
+        }
+
+        .dropdown-trigger {
+            background: var(--bg-elevated);
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 14px 18px;
+            font-size: 15px;
+            color: var(--text-primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .dropdown-trigger:hover {
+            border-color: var(--primary-light);
+        }
+
+        .dropdown-trigger.open {
+            border-color: var(--primary);
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            box-shadow: var(--shadow-focus);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--bg-elevated);
+            border: 2px solid var(--primary);
+            border-top: none;
+            border-bottom-left-radius: var(--radius-lg);
+            border-bottom-right-radius: var(--radius-lg);
+            z-index: 100;
+            display: none;
+            max-height: 250px;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 12px 18px;
+            cursor: pointer;
+            transition: all 0.15s;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .dropdown-item:hover {
+            background: var(--primary-soft);
+            color: var(--primary-light);
+        }
+
+        .dropdown-item.selected {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 14px 24px;
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            font-size: 15px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .btn-secondary {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border-light);
+        }
+
+        .btn-secondary:hover {
+            background: #475569;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #ff1f45;
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* Config List */
+        .config-list {
+            background: var(--bg-elevated);
+            border-radius: var(--radius-lg);
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 16px;
+            padding: 8px;
+            border: 1px solid var(--border-light);
+        }
+
+        .config-item {
+            padding: 14px 18px;
+            margin: 4px 0;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.15s;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .config-item:hover {
+            background: var(--primary-soft);
+            color: var(--primary);
+        }
+
+        .config-item.selected {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Status Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            border: 2px solid var(--border-light);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Log Area */
+        .log-area {
+            background: #1e293b;
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 11px;
+            line-height: 1.4;
+            color: #e2e8f0;
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #334155;
+            margin-top: 20px;
+        }
+
+        /* Engine Selector */
+        .engine-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 24px;
+        }
+
+        .engine-card {
+            position: relative;
+            cursor: pointer;
+            perspective: 1000px;
+        }
+
+        .engine-card input {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .engine-card-inner {
+            background: rgba(30, 41, 59, 0.4);
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            padding: 24px 16px;
+            text-align: center;
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            overflow: hidden;
+            backdrop-filter: blur(8px);
+        }
+
+        .engine-card-inner svg {
+            width: 40px;
+            height: 40px;
+            stroke: var(--text-light);
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .engine-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .engine-desc {
+            font-size: 12px;
+            color: var(--text-light);
+            line-height: 1.4;
+        }
+
+        .engine-card:hover .engine-card-inner {
+            border-color: rgba(6, 182, 212, 0.4);
+            background: rgba(6, 182, 212, 0.05);
+            transform: translateY(-8px);
+        }
+
+        .engine-card input:checked+.engine-card-inner {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(8, 145, 178, 0.05) 100%);
+            box-shadow: 0 15px 35px rgba(6, 182, 212, 0.2), inset 0 0 20px rgba(6, 182, 212, 0.1);
+            transform: translateY(-8px) rotateX(2deg);
+        }
+
+        .engine-card input:checked+.engine-card-inner svg {
+            stroke: var(--primary);
+            filter: drop-shadow(0 0 8px var(--primary));
+            transform: scale(1.1);
+        }
+
+        .engine-card input:checked+.engine-card-inner::after {
+            content: 'SELECTED';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 9px;
+            font-weight: 900;
+            background: var(--primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 20px;
+            letter-spacing: 1px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Sidebar Toggle Layer */
+        .sidebar-toggle-group {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .apex-switch {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-light);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .apex-switch:hover {
+            background: rgba(6, 182, 212, 0.05);
+            border-color: rgba(6, 182, 212, 0.3);
+            transform: translateX(4px);
+        }
+
+        .apex-switch:active {
+            transform: translateX(2px) scale(0.98);
+        }
+
+        /* Login Styles */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .login-card {
+            background: #1e293b;
+            padding: 48px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            transform: translateY(-120vh) scale(0.7);
+            transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .login-card.fly-in {
+            transform: translateY(0) scale(1);
+        }
+
+        .login-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: #fff;
+            text-align: center;
+            letter-spacing: -1px;
+        }
+
+        .login-title span {
+            color: var(--primary);
+        }
+
+        .login-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 40px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .login-field {
+            margin-bottom: 24px;
+        }
+
+        .login-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 18px 24px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .login-input:focus {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.2);
+            transform: scale(1.02);
+        }
+
+        .login-btn-container {
+            margin-top: 32px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 18px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 16px rgba(6, 182, 212, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(6, 182, 212, 0.4);
+            filter: brightness(1.1);
+        }
+
+        .login-btn:active {
+            transform: translateY(1px);
+        }
+
+        .slider-unlocker {
+            position: relative;
+            width: 100%;
+            height: 52px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            margin-top: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.3s ease;
+        }
+
+        .slider-unlocker:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .slider-text {
+            color: var(--text-light);
+            font-size: 15px;
+            font-weight: 600;
+            z-index: 5;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .slider-progress {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 40px;
+            background: var(--primary);
+            z-index: 2;
+            transition: width 0.1s ease-out, background 0.3s ease;
+            border-radius: 30px;
+            box-shadow: 5px 0 15px rgba(6, 182, 212, 0.4);
+        }
+
+        .slider-unlocker.logging-in .slider-progress {
+            width: 100% !important;
+            background: #0891b2;
+            box-shadow: 0 0 20px rgba(8, 145, 178, 0.6);
+        }
+
+        .slider-unlocker.login-success .slider-progress {
+            width: 100% !important;
+            background: var(--primary) !important;
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.6) !important;
+        }
+
+        .slider-unlocker.login-error-state .slider-progress {
+            width: 100% !important;
+            background: #ff3b3b !important;
+            box-shadow: 0 0 20px rgba(255, 59, 59, 0.6) !important;
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 10000;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-left: 4px solid var(--primary);
+            padding: 16px 24px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transform: translateX(-120%);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast svg {
+            color: var(--primary);
+        }
+
+        .login-error {
+            color: var(--danger);
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            display: none;
+            animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+        }
+
+        .rain-drop {
+            position: fixed;
+            width: 2px;
+            height: 10px;
+            background: linear-gradient(to bottom, var(--primary), transparent);
+            pointer-events: none;
+            z-index: 10000;
+            border-radius: 1px;
+            opacity: 0.8;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        .premium-switch span {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .switch-box {
+            position: relative;
+            width: 32px;
+            height: 18px;
+            background: #334155;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+        .switch-box::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .apex-switch input {
+            display: none;
+        }
+
+        .apex-switch input:checked+.switch-box {
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .apex-switch input:checked+.switch-box::after {
+            left: 17px;
+        }
+
+        /* Footer */
+        .footer-note {
+            text-align: center;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-light);
+            color: var(--text-light);
+            font-size: 13px;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(3px);
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border-light);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--bg-surface);
+            padding: 30px;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--primary);
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-white);
+        }
+
+        .modal-body {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .modal-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .modal-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .app-container { grid-template-columns: 1fr; height: auto; }
+            .sidebar { display: none; }
+        }
+
+        /* Key Capture Button */
+        .key-capture-btn {
+            background: var(--bg-elevated);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-md);
+            padding: 10px 16px;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 180px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .key-capture-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+        }
+    </style>
+
+    <div id="cursor-glow" style="left: 782px; top: 193px;"></div>
+
+    <div class="toast-container" id="toast-container">
+        <div class="toast" id="login-toast">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            Successfully logged in
+        </div>
+    </div>
+
+    <!-- Login Overlay -->
+    <div id="login-overlay" class="login-overlay" style="opacity: 0; display: none;">
+        <div id="login-card" class="login-card fly-in" style="transform: translateY(100vh) scale(0.9) rotate(5deg); opacity: 0;">
+            <div class="login-title">Flow<span>Externals</span></div>
+            <div class="login-subtitle">Enter your license key to access</div>
+
+            <div class="login-field">
+                <input type="text" id="license-key" class="login-input" placeholder="Flow-123" autocomplete="off" />
+            </div>
+
+            <div class="slider-unlocker login-success" id="login-slider">
+                <div class="slider-progress" id="slider-progress" style="transition: width 0.3s cubic-bezier(0.23, 1, 0.32, 1); width: 100%;"></div>
+                <div class="slider-text" id="slider-text" style="opacity: 1; color: white;"></div>
+            </div>
+
+            <div id="login-error" class="login-error" style="display: none;">Invalid License Key. Please try again or contact support.</div>
+        </div>
+    </div>
+
+    <!-- Main Content Wrapper -->
+    <div id="app-wrapper" style="filter: none; transition: filter 0.8s; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
+        <!-- Floating Terminate Button -->
+        <button onclick="terminateApp()" title="Terminate Application" style="position: fixed; top: 20px; right: 20px; z-index: 9999; background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); border-radius: 8px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; backdrop-filter: blur(4px); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); transition: all 0.2s ease;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18.36 6.64a9 9 0 1 1-12.73 0"/>
+                <line x1="12" y1="2" x2="12" y2="12"/>
+            </svg>
+        </button>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-spinner"></div>
+        </div>
+
+        <!-- Notification Modal -->
+        <div id="notificationModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header" id="modalTitle">Notification</div>
+                <div class="modal-body" id="modalText">Message goes here...</div>
+                <button class="modal-btn" onclick="closeModal()">Understood</button>
+            </div>
+        </div>
+
+        <div class="app-container">
+            <!-- Sidebar Navigation -->
+            <div class="sidebar">
+                <div class="logo-area">
+                    <div class="logo">
+                        FLOWEXTERNALS
+                        <span class="logo-dot"></span>
+                    </div>
+                    <div style="font-size: 10px; color: var(--primary); font-weight: 700; margin-top: -4px; letter-spacing: 1px; opacity: 0.8;">
+                        PRECISION ENGINEERED</div>
+                </div>
+
+                <div class="nav-menu">
+                    <button class="nav-item active" onclick="openTab('settings')">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="22" y1="12" x2="18" y2="12"/>
+                            <line x1="6" y1="12" x2="2" y2="12"/>
+                            <line x1="12" y1="6" x2="12" y2="2"/>
+                            <line x1="12" y1="22" x2="12" y2="18"/>
+                        </svg>
+                        Aimbot Settings
+                    </button>
+                    <button class="nav-item" onclick="openTab('model')">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                            <line x1="8" y1="21" x2="16" y2="21"/>
+                            <line x1="12" y1="17" x2="12" y2="21"/>
+                        </svg>
+                        Model Management
+                    </button>
+                    <button class="nav-item" onclick="openTab('configs')">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        Configurations
+                    </button>
+                    <button class="nav-item" onclick="openTab('debug')">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                        Info
+                    </button>
+                </div>
+
+                <div class="system-status">
+                    <div class="status-row">
+                        <span class="status-label">Status</span>
+                        <span class="status-badge">
+                            <span id="status_msg">No model loaded</span>
+                        </span>
+                    </div>
+                    <div class="status-row">
+                        <span class="status-label">FPS</span>
+                        <span class="status-badge" id="fps_display">0 FPS</span>
+                    </div>
+
+                    <div class="sidebar-toggle-group" style="margin-top: 10px; border-top: none; padding-top: 0;">
+                        <div class="status-row">
+                            <span class="status-label">Expires</span>
+                            <span class="status-badge" id="auth_expiry" style="color: var(--primary); font-weight: bold;">03/18/2026 07:25 PM</span>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-toggle-group">
+                        <label class="apex-switch">
+                            <span>Screen Capture</span>
+                            <input type="checkbox" id="screen_capture_enabled" onchange="postUpdate('screen_capture_enabled', this.checked)" />
+                            <div class="switch-box"></div>
+                        </label>
+                    </div>
+
+                    <div class="sidebar-footer" style="margin-top: auto; padding-top: 20px; text-align: center; opacity: 0.4; font-size: 10px; letter-spacing: 0.5px; font-weight: 600; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.02);">
+                        © 2024-2026 FLOWEXTERNALS • ALL RIGHTS RESERVED
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <div class="content-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div></div>
+                </div>
+
+                <!-- SETTINGS TAB -->
+                <div id="settings" class="tab-content active">
+                    <div class="card" style="--mouse-x: 441px; --mouse-y: 108px; border-color: rgba(6, 182, 212, 0.27);">
+                        <div class="card-header">
+                            <div class="card-title"><span></span> Core Features</div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-label">
+                                Aimbot Enable
+                                <span class="hint">Master switch</span>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="aimbot_enabled" onchange="postUpdate('aimbot_enabled', this.checked)" />
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-label">
+                                1. Aimkey
+                                <span class="hint">Click to change</span>
+                            </div>
+                            <div class="key-capture-btn" id="aim_key_btn" onclick="captureKey('aim_key')">Flow-123</div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-label">
+                                2. Aimkey
+                                <span class="hint">Click to change</span>
+                            </div>
+                            <div class="key-capture-btn" id="aim_key_2_btn" onclick="captureKey('aim_key_2')">Flow-123</div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="--mouse-x: 441px; --mouse-y: -229px; border-color: var(--border-light);">
+                        <div class="card-header" style="margin-bottom: 0;">
+                            <div class="card-title"><span></span> Adjustments</div>
+                        </div>
+
+                        <div class="sub-nav">
+                            <div class="sub-nav-item active" onclick="switchSubTab('sub-tuning', this)">Fine Tuning</div>
+                            <div class="sub-nav-item" onclick="switchSubTab('sub-triggerbot', this)">Triggerbot</div>
+                            <div class="sub-nav-item" onclick="switchSubTab('sub-precision', this)">Precision</div>
+                        </div>
+
+                        <!-- Fine Tuning Sub-Tab -->
+                        <div id="sub-tuning" class="sub-tab-content active">
+                            <div class="form-row">
+                                <div class="form-label">
+                                    Confidence Threshold
+                                    <span class="hint">Detection sensitivity</span>
+                                </div>
+                                <div class="range-container">
+                                    <input type="range" id="confidence" min="0.1" max="1.0" step="0.05" oninput="liveUpdate('confidence', this.value)" />
+                                    <span class="range-value" id="val_confidence">0.45</span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-label">
+                                    Target Switch Delay
+                                    <span class="hint">Cooldown between target changes</span>
+                                </div>
+                                <div class="range-container">
+                                    <input type="range" id="target_switch_cooldown" min="0" max="2.0" step="0.01" oninput="liveUpdate('target_switch_cooldown', this.value)" />
+                                    <span class="range-value" id="val_target_switch_cooldown">0.20</span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-label">
+                                    Aim Speed
+                                    <span class="hint">Smoothing factor</span>
+                                </div>
+                                <div class="range-container">
+                                    <input type="range" id="aim_speed" min="1" max="100" step="1" oninput="liveUpdate('aim_speed', this.value)" />
+                                    <span class="range-value" id="val_aim_speed">100</span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-label">
+                                    Aim Response Curve
+                                    <span class="hint">Input behavior</span>
+                                </div>
+                                <div class="custom-dropdown" id="aim_curve_dropdown" style="width: 200px;">
+                                    <div class="dropdown-trigger" onclick="toggleDropdown('aim_curve_options')">
+                                        <span id="selected_aim_curve_text">Exponential</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M6 9l6 6 6-6"/>
+                                        </svg>
+                                    </div>
+                                    <div class="dropdown-menu" id="aim_curve_options">
+                                        <div class="dropdown-item" onclick="selectAimCurve('linear', 'Linear ')">Linear</div>
+                                        <div class="dropdown-item" onclick="selectAimCurve('exponential', 'Exponential ')">Exponential</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-label">
+                                    Aim Height
+                                    <span class="hint">Target offset</span>
+                                </div>
+                                <div class="range-container">
+                                    <input type="range" id="aim_height" min="0" max="100" step="1" oninput="liveUpdate('aim_height', this.value)" />
+                                    <span class="range-value" id="val_aim_height">85</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Precision Sub-Tab -->
+                        <div id="sub-precision" class="sub-tab-content">
+                            <div class="form-row">
+                                <div class="form-label">
+                                    Stick Deadzone Compensation
+                                    <span class="hint">Power added to overcome game deadzone (Default: 0.14)</span>
+                                </div>
+                                <div class="range-container">
+                                    <input type="range" class="slider-modern" id="deadzone" min="0" max="0.5" step="0.01" value="0.14" oninput="liveUpdate('deadzone', this.value)" />
+                                    <span class="range-value" id="val_deadzone">0.14</span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-label">
+                                    Precision Threshold
+                                    <span class="hint">Distance from crosshair for full power (Default: 2.0)</span>
+                                </div>
+                                <div class="range-container">
+                                    <input type="range" class="slider-modern" id="deadzone_threshold" min="0" max="10" step="0.1" value="2.0" oninput="liveUpdate('deadzone_threshold', this.value)" />
+                                    <span class="range-value" id="val_deadzone_threshold">2.0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Triggerbot Sub-Tab -->
+                        <div id="sub-triggerbot" class="sub-tab-content">
+                            <div class="form-row">
+                                <div class="form-label">
+                                    Triggerbot Enable
+                                    <span class="hint">Auto-fire on target</span>
+                                </div>
+                                <label class="toggle">
+                                    <input type="checkbox" id="trigger_bot" onchange="postUpdate('trigger_bot', this.checked)" />
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-label">
+                                    Always Enabled
+                                    <span class="hint">Fire without keybind</span>
+                                </div>
+                                <label class="toggle">
+                                    <input type="checkbox" id="trigger_always_enabled" onchange="postUpdate('trigger_always_enabled', this.checked)" />
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="form-row" id="row_triggerbot_key" style="display: flex;">
+                                <div class="form-label">
+                                    Triggerbot Key
+                                    <span class="hint">Click to set key</span>
+                                </div>
+                                <div class="key-capture-btn" id="triggerbot_key_btn" onclick="captureKey('triggerbot_key')">Flow-123</div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-label">
+                                    Trigger Delay
+                                    <span class="hint">Delay before first shot</span>
+                                </div>
+                                <div class="range-container">
+                                    <input type="range" id="trigger_delay" min="0.0" max="1.0" step="0.05" oninput="liveUpdate('trigger_delay', this.value)" />
+                                    <span class="range-value" id="val_trigger_delay">0.05</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MODEL TAB -->
+                <div id="model" class="tab-content">
+                    <div class="card" style="--mouse-x: 782px; --mouse-y: 193px; border-color: var(--border-light);">
+                        <div class="card-header">
+                            <div class="card-title"><span></span> Model Selection</div>
+                        </div>
+                        <div class="custom-dropdown" id="model_dropdown">
+                            <div class="dropdown-trigger" onclick="toggleDropdown('model_options')">
+                                <span id="selected_model_text">Select Model...</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M6 9l6 6 6-6"/>
+                                </svg>
+                            </div>
+                            <div class="dropdown-menu" id="model_options">
+                                <div class="dropdown-item" onclick="selectModelItem('Apex_1')">Apex_1</div>
+                                <div class="dropdown-item" onclick="selectModelItem('Fortnite_1')">Fortnite_1</div>
+                            </div>
+                        </div>
+
+                        <div class="engine-selector">
+                            <label class="engine-card">
+                                <input type="radio" name="model_type" value="engine" onchange="postUpdate('model_type', 'engine')" />
+                                <div class="engine-card-inner">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                                    </svg>
+                                    <div class="engine-name">TensorRT</div>
+                                    <div class="engine-desc">Maximum FPS for NVIDIA GPUs via Hardware Engines</div>
+                                </div>
+                            </label>
+                            <label class="engine-card">
+                                <input type="radio" name="model_type" value="onnx" onchange="postUpdate('model_type', 'onnx')" />
+                                <div class="engine-card-inner">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                    </svg>
+                                    <div class="engine-name">DirectML</div>
+                                    <div class="engine-desc">Universal support for AMD &amp; NVIDIA via ONNX Runtime</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="card" style="--mouse-x: 782px; --mouse-y: 193px; border-color: var(--border-light);">
+                        <div class="card-header">
+                            <div class="card-title"><span></span> Engine Configuration</div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-label">
+                                Input Resolution
+                                <span class="hint">FOV Size (Pixels)</span>
+                            </div>
+                            <select id="inp_imgsz" class="input-modern" style="width: 140px;" onchange="postUpdate('engine_imgsz', parseInt(this.value))">
+                                <option value="160">160 x 160</option>
+                                <option value="320">320 x 320</option>
+                                <option value="640">640 x 640</option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-primary btn-block" style="margin-bottom: 12px;" onclick="apiCall('/api/reload', {}, 'Reloading model...')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 4v6h-6"/>
+                                <path d="M1 20v-6h6"/>
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/>
+                                <path d="M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                            </svg>
+                            Load Model
+                        </button>
+
+                        <div style="display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;">
+                            <button class="btn btn-secondary" style="flex: 1; min-width: 140px;" onclick="apiCall('/api/build', {engine_imgsz: parseInt(document.getElementById('inp_imgsz').value)}, 'Building TensorRT (This takes 2-5 minutes)...')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                                </svg>
+                                Build Engine
+                            </button>
+                            <button class="btn btn-secondary" style="flex: 1; min-width: 140px; background: rgba(6, 182, 212, 0.1); border-color: #06b6d4; color: #06b6d4;" onclick="apiCall('/api/download_trt', {}, 'Downloading TensorRT (This may take a few minutes)...')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7 10 12 15 17 10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                Download AI Runtime
+                            </button>
+                        </div>
+
+                        <div style="margin-top: 16px; text-align: center;">
+                            <p id="build_status" style="font-size: 13px; color: var(--primary); font-weight: bold; margin-bottom: 4px;"></p>
+                            <p id="build_time" style="font-size: 12px; color: var(--text-muted);"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONFIGS TAB -->
+                <div id="configs" class="tab-content">
+                    <div class="card" style="--mouse-x: 782px; --mouse-y: 193px; border-color: var(--border-light);">
+                        <div class="card-header">
+                            <div class="card-title"><span></span> Save Configuration</div>
+                        </div>
+                        <input type="text" id="cfg_name" class="input-modern" placeholder="Enter config name..." style="margin-bottom: 16px;" />
+                        <button class="btn btn-primary btn-block" onclick="saveConfig()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                                <polyline points="17 21 17 13 7 13 7 21"/>
+                                <polyline points="7 3 7 8 15 8"/>
+                            </svg>
+                            Save Current Config
+                        </button>
+                    </div>
+
+                    <div class="card" style="--mouse-x: 782px; --mouse-y: 193px; border-color: var(--border-light);">
+                        <div class="card-header">
+                            <div class="card-title"><span></span> Configuration Archive</div>
+                        </div>
+                        <div class="config-list" id="list_configs"></div>
+                        <div class="btn-group">
+                            <button class="btn btn-secondary" style="flex: 1;" onclick="loadConfig()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M2 12h20"/>
+                                    <path d="M12 2v20"/>
+                                    <circle cx="12" cy="12" r="10"/>
+                                </svg>
+                                Load
+                            </button>
+                            <button class="btn btn-primary" style="flex: 1;" onclick="updateConfig()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                                    <polyline points="17 21 17 13 7 13 7 21"/>
+                                    <polyline points="7 3 7 8 15 8"/>
+                                </svg>
+                                Update
+                            </button>
+                            <button class="btn btn-danger" style="flex: 1;" onclick="deleteConfig()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"/>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                </svg>
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DEBUG TAB -->
+                <div id="debug" class="tab-content">
+                    <div class="stats-grid">
+                        <div class="stat-card" style="grid-column: span 2; border: 1px solid var(--primary-glow);">
+                            <div class="stat-label">Active Inference Engine</div>
+                            <div class="stat-value text-primary" id="debug_active_engine" style="font-weight: 800;"><span class="badge-dot offline"></span> NONE/WAITING...</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Current AI (FPS)</div>
+                            <div class="stat-value" id="debug_fps">0.0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Average AI (FPS)</div>
+                            <div class="stat-value text-primary" id="debug_avg_fps" style="font-weight: 800;">0.0</div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="--mouse-x: 782px; --mouse-y: 193px; border-color: var(--border-light);">
+                        <div class="card-header">
+                            <div class="card-title"><span></span> Diagnostic Tools</div>
+                        </div>
+                        <div class="log-area" id="log-area">[19:25:19] [SYSTEM] Preparing ...<br />[19:25:20] [DEBUG] SSL bypass enabled.<br />[19:25:20] [SYSTEM] Hardware Check: ['DmlExecutionProvider', 'CPUExecutionProvider']<br />[19:25:20] [SYSTEM] Selected Provider: DmlExecutionProvider<br />[19:25:20] requests\__init__.py:86: RequestsDependencyWarning: Unable to find acceptable character detection dependency (chardet or charset_normalizer).<br />[19:25:20] warnings.warn(<br />[19:25:21] [SYSTEM] Web callbacks registered.<br />[19:25:21] [SYSTEM] Activation successful<br />[19:25:21] [INFO] Waiting for login before starting aimbot...<br />[19:25:21] [WEB] Server running at http://localhost:8000<br />[19:25:44] [SUCCESS] Emulation started.<br />[19:25:45] [TRAINER] Auto-trainer started!</div>
+                    </div>
+                </div>
+
+                <div class="footer-note">
+                    © 2024-2026 FLOWEXTERNALS • ALL RIGHTS RESERVED
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let pollInterval = null;
+        let isPolling = true;
+        let selectedConfig = null;
+        let isLoggedIn = false;
+        let isSliding = false;
+        let startX = 0;
+        let capturingTarget = null;
+
+        async function checkLogin() {
+            const keyEl = document.getElementById('license-key');
+            const key = keyEl.value;
+            const slider = document.getElementById('login-slider');
+            const text = document.getElementById('slider-text');
+            const error = document.getElementById('login-error');
+
+            if (!key) {
+                error.style.display = 'block';
+                error.innerText = "Please enter a key.";
+                slider.className = 'slider-unlocker login-error-state';
+                text.innerText = "ERROR";
+                setTimeout(() => resetSlider(), 1500);
+                return;
+            }
+
+            slider.className = 'slider-unlocker logging-in';
+            text.innerText = "LOGGING IN...";
+            text.style.opacity = "1";
+            error.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ key: key })
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    isLoggedIn = true;
+                    localStorage.setItem('apex_key', key);
+
+                    slider.className = 'slider-unlocker login-success';
+                    text.innerText = "";
+                    text.style.color = "white";
+
+                    showToast();
+
+                    const overlay = document.getElementById('login-overlay');
+                    const wrapper = document.getElementById('app-wrapper');
+                    const card = document.getElementById('login-card');
+
+                    card.style.transform = 'translateY(100vh) scale(0.9) rotate(5deg)';
+                    card.style.opacity = '0';
+                    overlay.style.opacity = '0';
+                    wrapper.style.filter = 'none';
+
+                    setTimeout(() => {
+                        overlay.style.display = 'none';
+                        startPolling();
+                    }, 500);
+                } else {
+                    throw new Error(data.message || "Invalid Key");
+                }
+            } catch (e) {
+                error.style.display = 'block';
+                error.innerText = e.message;
+                slider.className = 'slider-unlocker login-error-state';
+                text.innerText = "ERROR";
+                setTimeout(() => resetSlider(), 1500);
+            }
+        }
+
+        function showToast() {
+            const toast = document.getElementById('login-toast');
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 5000);
+        }
+
+        function resetSlider() {
+            const slider = document.getElementById('login-slider');
+            const progress = document.getElementById('slider-progress');
+            const text = document.getElementById('slider-text');
+            slider.className = 'slider-unlocker';
+            progress.style.transition = 'width 0.4s cubic-bezier(0.23, 1, 0.32, 1)';
+            progress.style.width = `40px`;
+            text.style.opacity = "1";
+            text.innerText = "Slide to login";
+            text.style.color = "";
+            isSliding = false;
+        }
+
+        const slider = document.getElementById('login-slider');
+        const progress = document.getElementById('slider-progress');
+
+        if (slider) {
+            const initSlider = () => {
+                const maxSlide = slider.clientWidth;
+
+                const onStart = (e) => {
+                    if (isLoggedIn) return;
+                    isSliding = true;
+                    startX = (e.type === 'mousedown') ? e.clientX : e.touches[0].clientX;
+                    progress.style.transition = 'none';
+                };
+
+                const onMove = (e) => {
+                    if (!isSliding) return;
+                    const currentX = (e.type === 'mousemove') ? e.clientX : e.touches[0].clientX;
+                    let delta = currentX - startX;
+                    if (delta < 40) delta = 40;
+                    if (delta > maxSlide) delta = maxSlide;
+                    progress.style.width = `${delta}px`;
+
+                    if (Math.random() > 0.4) {
+                        const rect = slider.getBoundingClientRect();
+                        const drop = document.createElement('div');
+                        drop.className = 'rain-drop';
+                        const spawnX = rect.left + delta;
+                        const spawnY = rect.top + (rect.height / 2);
+                        drop.style.left = spawnX + 'px';
+                        drop.style.top = spawnY + 'px';
+                        const angle = (Math.random() * Math.PI) + (Math.PI / 2);
+                        const velocity = 3 + Math.random() * 5;
+                        const vx = Math.cos(angle) * velocity;
+                        const vy = Math.sin(angle) * velocity - 1;
+                        document.body.appendChild(drop);
+                        let life = 0;
+                        const maxLife = 40;
+                        const animateDrop = () => {
+                            life++;
+                            const curX = parseFloat(drop.style.left) + vx;
+                            const curY = parseFloat(drop.style.top) + vy + (life * 0.2);
+                            drop.style.left = curX + 'px';
+                            drop.style.top = curY + 'px';
+                            drop.style.opacity = (1 - (life / maxLife)) * 0.8;
+                            drop.style.transform = `rotate(${Math.atan2(vy + (life * 0.2), vx) * 180 / Math.PI + 90}deg)`;
+                            if (life < maxLife) { requestAnimationFrame(animateDrop); } else { drop.remove(); }
+                        };
+                        requestAnimationFrame(animateDrop);
+                    }
+                    document.getElementById('slider-text').style.opacity = 0.6;
+                };
+
+                const onEnd = () => {
+                    if (!isSliding) return;
+                    isSliding = false;
+                    const currentWidth = parseFloat(progress.style.width);
+                    if (currentWidth >= maxSlide * 0.85) {
+                        progress.style.transition = 'width 0.3s cubic-bezier(0.23, 1, 0.32, 1)';
+                        progress.style.width = `100%`;
+                        checkLogin();
+                    } else {
+                        progress.style.transition = 'width 0.4s cubic-bezier(0.23, 1, 0.32, 1)';
+                        progress.style.width = `40px`;
+                        document.getElementById('slider-text').style.opacity = 1;
+                        document.getElementById('slider-text').innerText = "Slide to login";
+                    }
+                };
+
+                slider.addEventListener('mousedown', onStart);
+                window.addEventListener('mousemove', (e) => { if (isSliding) onMove(e); });
+                window.addEventListener('mouseup', (e) => { if (isSliding) onEnd(e); });
+                slider.addEventListener('touchstart', onStart, { passive: false });
+                window.addEventListener('touchmove', (e) => { if (isSliding) onMove(e); }, { passive: false });
+                window.addEventListener('touchend', (e) => { if (isSliding) onEnd(e); });
+            };
+
+            initSlider();
+            window.addEventListener('resize', initSlider);
+        }
+
+        window.addEventListener('load', () => {
+            setTimeout(() => { document.getElementById('login-card').classList.add('fly-in'); }, 100);
+            const savedKey = localStorage.getItem('apex_key');
+            if (savedKey) { document.getElementById('license-key').value = savedKey; }
+        });
+
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !isLoggedIn) {
+                const keyInput = document.getElementById('license-key');
+                if (keyInput === document.activeElement || keyInput.value) { checkLogin(); }
+            }
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            const glow = document.getElementById('cursor-glow');
+            if (glow) { glow.style.left = e.clientX + 'px'; glow.style.top = e.clientY + 'px'; }
+            document.querySelectorAll('.card').forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+                const dist = Math.sqrt(Math.pow(x - rect.width / 2, 2) + Math.pow(y - rect.height / 2, 2));
+                if (dist < 300) {
+                    card.style.borderColor = `rgba(6, 182, 212, ${Math.max(0.1, (1 - dist / 300) * 0.4)})`;
+                } else {
+                    card.style.borderColor = 'var(--border-light)';
+                }
+            });
+        });
+
+        function showLoading(message = 'Loading...') {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) overlay.style.display = 'flex';
+        }
+
+        function hideLoading() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) overlay.style.display = 'none';
+        }
+
+        function openTab(id) {
+            try {
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                const tab = document.getElementById(id);
+                if (tab) tab.classList.add('active');
+                document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+                if (window.event && window.event.currentTarget) {
+                    window.event.currentTarget.classList.add('active');
+                }
+                if (id === 'configs') refreshConfigs();
+            } catch (e) { console.error(e); }
+        }
+
+        function switchSubTab(id, element) {
+            try {
+                const card = element.closest('.card');
+                card.querySelectorAll('.sub-tab-content').forEach(c => c.classList.remove('active'));
+                const tab = document.getElementById(id);
+                if (tab) tab.classList.add('active');
+                card.querySelectorAll('.sub-nav-item').forEach(b => b.classList.remove('active'));
+                element.classList.add('active');
+                document.querySelectorAll('input[type="range"]').forEach(updateSliderFill);
+            } catch (e) { console.error('Error opening tab:', e); }
+        }
+
+        async function poll() {
+            if (!isPolling) return;
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 3000);
+                const response = await fetch('/api/state', { signal: controller.signal, headers: { 'Cache-Control': 'no-cache' } });
+                clearTimeout(timeoutId);
+                if (!response.ok) { throw new Error(`HTTP error! status: ${response.status}`); }
+                const d = await response.json();
+
+                if (d.auth) {
+                    const exp = document.getElementById('auth_expiry');
+                    if (exp && d.auth.expiry && d.auth.expiry !== "N/A") {
+                        const timestamp = parseInt(d.auth.expiry);
+                        if (!isNaN(timestamp) && timestamp > 0) {
+                            const expDate = new Date(timestamp * 1000);
+                            const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: true };
+                            exp.innerText = expDate.toLocaleString('en-US', options).replace(',', '');
+                        } else { exp.innerText = d.auth.expiry; }
+                    } else if (exp) { exp.innerText = "N/A"; }
+                }
+
+                if (!document.activeElement || !document.activeElement.matches('input[type="range"]')) {
+                    const aimbotEnabled = document.getElementById('aimbot_enabled');
+                    const triggerBot = document.getElementById('trigger_bot');
+                    const screenCapture = document.getElementById('screen_capture_enabled');
+                    const triggerAlways = document.getElementById('trigger_always_enabled');
+                    const confidence = document.getElementById('confidence');
+                    const aimSpeed = document.getElementById('aim_speed');
+                    const aimHeight = document.getElementById('aim_height');
+                    const triggerDelay = document.getElementById('trigger_delay');
+                    const targetSwitchCooldown = document.getElementById('target_switch_cooldown');
+                    const deadzone = document.getElementById('deadzone');
+                    const deadzoneThreshold = document.getElementById('deadzone_threshold');
+
+                    if (aimbotEnabled) aimbotEnabled.checked = d.aimbot_enabled === true;
+                    if (triggerBot) triggerBot.checked = d.trigger_bot === true;
+                    if (triggerAlways) triggerAlways.checked = d.trigger_always_enabled === true;
+
+                    const rowTriggerKey = document.getElementById('row_triggerbot_key');
+                    if (rowTriggerKey) { rowTriggerKey.style.display = (d.trigger_always_enabled) ? 'none' : 'flex'; }
+                    if (screenCapture) screenCapture.checked = d.screen_capture_enabled === true;
+
+                    if (confidence) { confidence.value = d.confidence || 0.45; const v = document.getElementById('val_confidence'); if (v) v.innerText = (d.confidence || 0.45).toFixed(2); updateSliderFill(confidence); }
+                    if (aimSpeed) { aimSpeed.value = d.aim_speed || 100; const v = document.getElementById('val_aim_speed'); if (v) v.innerText = Math.round(d.aim_speed || 100); updateSliderFill(aimSpeed); }
+                    if (targetSwitchCooldown) { targetSwitchCooldown.value = d.target_switch_cooldown || 0.2; const v = document.getElementById('val_target_switch_cooldown'); if (v) v.innerText = (parseFloat(d.target_switch_cooldown) || 0.2).toFixed(2); updateSliderFill(targetSwitchCooldown); }
+                    if (aimHeight) { aimHeight.value = d.aim_height || 85; const v = document.getElementById('val_aim_height'); if (v) v.innerText = Math.round(d.aim_height || 85); updateSliderFill(aimHeight); }
+                    if (triggerDelay) { triggerDelay.value = d.trigger_delay || 0.0; const v = document.getElementById('val_trigger_delay'); if (v) v.innerText = (parseFloat(d.trigger_delay) || 0.05).toFixed(2); updateSliderFill(triggerDelay); }
+                    if (deadzone) { deadzone.value = d.deadzone !== undefined ? d.deadzone : 0.14; const v = document.getElementById('val_deadzone'); if (v) v.innerText = (parseFloat(d.deadzone) || 0.14).toFixed(2); updateSliderFill(deadzone); }
+                    if (deadzoneThreshold) { deadzoneThreshold.value = d.deadzone_threshold !== undefined ? d.deadzone_threshold : 2.0; const v = document.getElementById('val_deadzone_threshold'); if (v) v.innerText = (parseFloat(d.deadzone_threshold) || 2.0).toFixed(1); updateSliderFill(deadzoneThreshold); }
+                }
+
+                if (d.models && Array.isArray(d.models)) {
+                    const menu = document.getElementById('model_options');
+                    const triggerText = document.getElementById('selected_model_text');
+                    if (menu) {
+                        const currentItems = menu.querySelectorAll('.dropdown-item').length;
+                        if (currentItems !== d.models.length) {
+                            menu.innerHTML = d.models.map(m => `<div class="dropdown-item ${m === d.selected_model ? 'selected' : ''}" onclick="selectModelItem('${m}')">${m}</div>`).join('');
+                        } else {
+                            menu.querySelectorAll('.dropdown-item').forEach(item => {
+                                if (item.innerText === d.selected_model) { item.classList.add('selected'); } else { item.classList.remove('selected'); }
+                            });
+                        }
+                    }
+                    if (triggerText) triggerText.innerText = d.selected_model || 'Select Model...';
+                }
+
+                if (d.model_type) { document.querySelectorAll('input[name="model_type"]').forEach(r => { if (r) r.checked = (r.value === d.model_type); }); }
+
+                const inpImgsz = document.getElementById('inp_imgsz');
+                if (inpImgsz) inpImgsz.value = d.engine_imgsz || 640;
+
+                const aimCurveText = document.getElementById('selected_aim_curve_text');
+                if (aimCurveText && d.aim_curve) {
+                    const curveLabels = { 'linear': 'Linear ', 'exponential': 'Exponential ' };
+                    aimCurveText.innerText = curveLabels[d.aim_curve] || d.aim_curve;
+                }
+
+                const aimCurveMenu = document.getElementById('aim_curve_options');
+                if (aimCurveMenu) {
+                    aimCurveMenu.querySelectorAll('.dropdown-item').forEach(item => {
+                        const val = item.getAttribute('onclick').match(/'([^']+)'/)[1];
+                        if (val === d.aim_curve) item.classList.add('selected');
+                        else item.classList.remove('selected');
+                    });
+                }
+
+                const buildStatus = document.getElementById('build_status');
+                if (buildStatus) {
+                    const currentStatus = d.engine_progress || '';
+                    buildStatus.innerText = currentStatus;
+                    if (currentStatus.includes("SUCCESS: TensorRT is ready!")) {
+                        showModal("Installation Success", "TensorRT SDK has been successfully installed and is ready to use!");
+                    } else if (currentStatus.includes("ERROR: Please restart as Admin!")) {
+                        showModal("Permission Denied", "The installation failed because of missing permissions. Please restart as Administrator.");
+                    } else if (d.status && d.status.includes("MISSING-ENGINE")) {
+                        const parts = d.status.split(':');
+                        const modelName = parts[1];
+                        const imgsz = parts[2];
+                        if (!window._missing_engine_shown) {
+                            showModal("Engine Build Required", `The optimized Engine for <b>${modelName}</b> at <b>${imgsz}px</b> is missing. Using fallback or running slower.<br><br>Do you want to build it now for maximum performance?`, true);
+                            window._missing_engine_shown = true;
+                        }
+                    } else if (d.status && d.status.includes("FOV-Mismatch")) {
+                        if (!window._fov_modal_shown) {
+                            showModal("FOV Mismatch Detected", "The loaded Engine/Model does not support the selected resolution. Please click 'Build Engine' to optimize the model for this FOVs.");
+                            window._fov_modal_shown = true;
+                            setTimeout(() => { window._fov_modal_shown = false; }, 30000);
+                        }
+                    }
+                }
+
+                const fpsDisplay = document.getElementById('fps_display');
+                if (fpsDisplay) fpsDisplay.innerText = Math.round(d.fps || 0) + ' FPS';
+                const statusMsg = document.getElementById('status_msg');
+                if (statusMsg) statusMsg.innerText = d.status || 'Ready';
+                const debugFps = document.getElementById('debug_fps');
+                if (debugFps) debugFps.innerText = (d.fps || 0).toFixed(1);
+                const debugAvgFps = document.getElementById('debug_avg_fps');
+                if (debugAvgFps) debugAvgFps.innerText = (d.avg_fps || 0).toFixed(1);
+
+                const activeEng = document.getElementById('debug_active_engine');
+                if (activeEng) {
+                    const status = d.status || "";
+                    if (status === "TensorRT") {
+                        activeEng.innerHTML = '<span class="badge-dot online"></span> TENSORRT (NVIDIA)';
+                    } else if (status === "DirectML") {
+                        activeEng.innerHTML = '<span class="badge-dot online" style="background:#06b6d4;"></span> DIRECTML (AMD/NVIDIA)';
+                    } else {
+                        activeEng.innerHTML = '<span class="badge-dot offline"></span> NONE/WAITING...';
+                    }
+                }
+
+                const logArea = document.getElementById('log-area');
+                if (logArea && d.logs && Array.isArray(d.logs)) {
+                    const newContent = d.logs.join('\n');
+                    if (logArea.innerText !== newContent) { logArea.innerText = newContent; logArea.scrollTop = logArea.scrollHeight; }
+                }
+
+                if (d.aim_keys_map) {
+                    ['aim_key', 'aim_key_2', 'triggerbot_key'].forEach(keyId => {
+                        const btn = document.getElementById(keyId + '_btn');
+                        if (btn && !btn.classList.contains('capturing')) {
+                            const currentValue = d[keyId];
+                            let currentName = "None";
+                            let foundInMap = false;
+                            for (let name in d.aim_keys_map) {
+                                if (d.aim_keys_map[name] === currentValue) { currentName = name; foundInMap = true; break; }
+                            }
+                            if (currentValue === 0) {
+                                currentName = keyId === 'triggerbot_key' ? "Always On (None)" : "Flow-123";
+                                btn.innerText = currentName;
+                            } else if (foundInMap) {
+                                btn.innerText = currentName;
+                            }
+                        }
+                    });
+                }
+            } catch (e) {
+                console.error('Poll error:', e);
+                if (e.name === 'AbortError') { console.log('Poll timeout - continuing...'); }
+            }
+        }
+
+        function liveUpdate(key, val) {
+            try {
+                const valueDisplay = document.getElementById('val_' + key);
+                const input = document.getElementById(key);
+                if (valueDisplay) {
+                    if (key === 'confidence' || key === 'trigger_delay' || key === 'target_switch_cooldown' || key === 'deadzone') {
+                        valueDisplay.innerText = parseFloat(val).toFixed(2);
+                    } else if (key === 'prediction_strength' || key === 'deadzone_threshold') {
+                        valueDisplay.innerText = parseFloat(val).toFixed(1);
+                    } else {
+                        valueDisplay.innerText = Math.round(val);
+                    }
+                }
+                if (input) updateSliderFill(input);
+                postUpdate(key, parseFloat(val));
+            } catch (e) { console.error('Live update error:', e); }
+        }
+
+        function updateSliderFill(input) {
+            if (!input) return;
+        }
+
+        async function postUpdate(key, val) {
+            try {
+                const response = await fetch('/api/update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ [key]: val })
+                });
+                if (!response.ok) { console.error('Update failed:', await response.text()); }
+            } catch (e) { console.error('Update error:', e); }
+        }
+
+        async function apiCall(url, body = {}, loadingMessage = 'Processing...') {
+            showLoading(loadingMessage);
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+                const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: controller.signal });
+                clearTimeout(timeoutId);
+                if (!response.ok) { const errorText = await response.text(); throw new Error(`API call failed: ${response.status} - ${errorText}`); }
+                try { return await response.json(); } catch (e) { return { success: true }; }
+            } catch (e) {
+                console.error('API call error:', e);
+                const logArea = document.getElementById('log-area');
+                if (logArea) { const timestamp = new Date().toLocaleTimeString(); logArea.innerText += `\n[${timestamp}] ERROR: ${e.message}`; logArea.scrollTop = logArea.scrollHeight; }
+                alert('Error: ' + e.message);
+                throw e;
+            } finally {
+                hideLoading();
+                setTimeout(() => poll(), 500);
+            }
+        }
+
+        function showModal(title, text, showBuildBtn = false) {
+            const modal = document.getElementById('notificationModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalText = document.getElementById('modalText');
+            if (modal.style.display === 'flex' && modalText.innerHTML === text) return;
+            modalTitle.innerText = title;
+            modalText.innerHTML = text;
+            const oldBtn = document.getElementById('modalBuildBtn');
+            if (oldBtn) oldBtn.remove();
+            if (showBuildBtn) {
+                const btn = document.createElement('button');
+                btn.id = 'modalBuildBtn';
+                btn.className = 'modal-btn';
+                btn.style.background = 'var(--primary)';
+                btn.style.marginTop = '8px';
+                btn.innerText = 'Build Now';
+                btn.onclick = () => { apiCall('/api/build', {}, 'Starting Build...'); closeModal(); };
+                modal.querySelector('.modal-content').appendChild(btn);
+            }
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('notificationModal').style.display = 'none';
+            const oldBtn = document.getElementById('modalBuildBtn');
+            if (oldBtn) oldBtn.remove();
+            apiCall('/api/clear_engine_status', {});
+            window._missing_engine_shown = false;
+        }
+
+        function toggleDropdown(menuId) {
+            const menu = document.getElementById(menuId);
+            const trigger = menu ? menu.previousElementSibling : null;
+            if (menu && trigger) { const isOpen = menu.classList.toggle('show'); trigger.classList.toggle('open', isOpen); }
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#model_dropdown')) { const menu = document.getElementById('model_options'); const trigger = document.querySelector('#model_dropdown .dropdown-trigger'); if (menu) menu.classList.remove('show'); if (trigger) trigger.classList.remove('open'); }
+            if (!e.target.closest('#aim_curve_dropdown')) { const menu = document.getElementById('aim_curve_options'); const trigger = document.querySelector('#aim_curve_dropdown .dropdown-trigger'); if (menu) menu.classList.remove('show'); if (trigger) trigger.classList.remove('open'); }
+        });
+
+        async function selectModelItem(name) {
+            document.getElementById('selected_model_text').innerText = name;
+            const menu = document.getElementById('model_options');
+            const trigger = document.querySelector('#model_dropdown .dropdown-trigger');
+            if (menu) menu.classList.remove('show');
+            if (trigger) trigger.classList.remove('open');
+            await postUpdate('selected_model', name);
+            poll();
+        }
+
+        async function selectAimCurve(val, label) {
+            document.getElementById('selected_aim_curve_text').innerText = label;
+            const menu = document.getElementById('aim_curve_options');
+            const trigger = document.querySelector('#aim_curve_dropdown .dropdown-trigger');
+            if (menu) menu.classList.remove('show');
+            if (trigger) trigger.classList.remove('open');
+            await postUpdate('aim_curve', val);
+            poll();
+        }
+
+        function captureKey(keyId) {
+            if (capturingTarget) return;
+            const btn = document.getElementById(keyId + '_btn');
+            if (!btn) return;
+            capturingTarget = keyId;
+            btn.classList.add('capturing');
+            btn.innerText = 'Waiting for key...';
+
+            const browserToVk = {
+                'Escape': 0, 'None': 0, 'Backspace': 0x08, 'Tab': 0x09, 'Enter': 0x0D, 'ShiftLeft': 0x10, 'ShiftRight': 0x10,
+                'ControlLeft': 0x11, 'ControlRight': 0x11, 'AltLeft': 0x12, 'AltRight': 0x12, 'Space': 0x20,
+                'ArrowLeft': 0x25, 'ArrowUp': 0x26, 'ArrowRight': 0x27, 'ArrowDown': 0x28,
+                'KeyA': 0x41, 'KeyB': 0x42, 'KeyC': 0x43, 'KeyD': 0x44, 'KeyE': 0x45, 'KeyF': 0x46,
+                'KeyG': 0x47, 'KeyH': 0x48, 'KeyI': 0x49, 'KeyJ': 0x4A, 'KeyK': 0x4B, 'KeyL': 0x4C,
+                'KeyM': 0x4D, 'KeyN': 0x4E, 'KeyO': 0x4F, 'KeyP': 0x50, 'KeyQ': 0x51, 'KeyR': 0x52,
+                'KeyS': 0x53, 'KeyT': 0x54, 'KeyU': 0x55, 'KeyV': 0x56, 'KeyW': 0x57, 'KeyX': 0x58,
+                'KeyY': 0x59, 'KeyZ': 0x5A, 'F1': 0x70, 'F2': 0x71, 'F3': 0x72, 'F4': 0x73,
+                'F5': 0x74, 'F6': 0x75, 'F7': 0x76, 'F8': 0x77, 'F9': 0x78, 'F10': 0x79, 'F11': 0x7A, 'F12': 0x7B
+            };
+
+            const finishCapture = (name, vk) => {
+                btn.classList.remove('capturing');
+                const finalTarget = capturingTarget;
+                capturingTarget = null;
+                window.removeEventListener('keydown', handleKey);
+                window.removeEventListener('mousedown', handleMouse);
+                if (vk === 0) {
+                    btn.innerText = finalTarget === 'triggerbot_key' ? 'Always On (None)' : 'Flow-123';
+                } else {
+                    btn.innerText = name.toUpperCase();
+                }
+                postUpdate(finalTarget, vk);
+                setTimeout(() => poll(), 500);
+            };
+
+            const handleKey = (e) => {
+                e.preventDefault(); e.stopPropagation();
+                if (e.code === 'Escape') return finishCapture('None', 0);
+                const vk = browserToVk[e.code] || e.keyCode;
+                let name = e.key.toUpperCase();
+                if (vk === 0x10) name = "SHIFT";
+                if (vk === 0x11) name = "CTRL";
+                if (vk === 0x12) name = "ALT";
+                finishCapture(name, vk);
+            };
+
+            const handleMouse = (e) => {
+                e.preventDefault();
+                const mouseMap = { 0: ['LMB', 0x01], 1: ['MMB', 0x04], 2: ['RMB', 0x02], 3: ['M4', 0x05], 4: ['M5', 0x06] };
+                const [name, vk] = mouseMap[e.button] || ['Mouse ' + e.button, 0];
+                finishCapture(name, vk);
+            };
+
+            window.addEventListener('keydown', handleKey);
+            window.addEventListener('mousedown', handleMouse);
+        }
+
+        async function refreshConfigs() {
+            try {
+                const response = await fetch('/api/configs', { headers: { 'Cache-Control': 'no-cache' } });
+                if (!response.ok) { throw new Error(`Failed to load configs: ${response.status}`); }
+                const d = await response.json();
+                const list = document.getElementById('list_configs');
+                if (list) {
+                    if (d.configs && Array.isArray(d.configs) && d.configs.length > 0) {
+                        list.innerHTML = d.configs.map(c => `<div class="config-item ${selectedConfig === c ? 'selected' : ''}" onclick="selectConfig('${c.replace(/'/g, "\\'")}')">${c}</div>`).join('');
+                    } else {
+                        list.innerHTML = '<div class="config-item" style="color: var(--text-light);">No configs found</div>';
+                    }
+                }
+            } catch (e) { console.error('Refresh configs error:', e); }
+        }
+
+        function selectConfig(name) { selectedConfig = name; refreshConfigs(); }
+
+        async function saveConfig() {
+            const nameInput = document.getElementById('cfg_name');
+            const name = nameInput ? nameInput.value.trim() : '';
+            if (!name) { alert('Please enter a config name'); return; }
+            try { await apiCall('/api/config/save', { name }, 'Saving config...'); if (nameInput) nameInput.value = ''; selectedConfig = name; await refreshConfigs(); } catch (e) {}
+        }
+
+        async function loadConfig() {
+            if (!selectedConfig) { alert('Please select a config first'); return; }
+            try { await apiCall('/api/config/load', { name: selectedConfig }, 'Loading config...'); setTimeout(() => poll(), 300); } catch (e) {}
+        }
+
+        async function updateConfig() {
+            if (!selectedConfig) { alert('Please select a config first'); return; }
+            try { await apiCall('/api/config/save', { name: selectedConfig }, 'Updating config...'); await refreshConfigs(); } catch (e) {}
+        }
+
+        async function deleteConfig() {
+            if (!selectedConfig) { alert('Please select a config first'); return; }
+            if (!confirm(`Are you sure you want to delete "${selectedConfig}"?`)) { return; }
+            try { await apiCall('/api/config/delete', { name: selectedConfig }, 'Deleting config...'); selectedConfig = null; await refreshConfigs(); } catch (e) {}
+        }
+
+        async function terminateApp() {
+            if (confirm("WARNING: This will terminate the entire application!\n\nAre you sure?")) {
+                try {
+                    await apiCall('/api/terminate', {}, 'Terminating application...');
+                    document.body.innerHTML = '<div style="height:100vh; width:100vw; background-color: #0f172a; display:flex; justify-content:center; align-items:center;"></div>';
+                    setTimeout(() => {
+                        window.close();
+                        setTimeout(() => {
+                            document.body.innerHTML = '<div style="height:100vh; width:100vw; background-color: #0f172a; display:flex; flex-direction:column; justify-content:center; align-items:center; color: white; font-family: Inter, sans-serif;"><h1>Terminated</h1><p style="opacity:0.5;">You can close this tab now.</p></div>';
+                        }, 500);
+                    }, 100);
+                } catch (e) { alert("Termination failed: " + e.message); }
+            }
+        }
+
+        function startPolling() {
+            if (pollInterval) clearInterval(pollInterval);
+            pollInterval = setInterval(async () => { try { await poll(); } catch (e) { console.error('Poll interval error:', e); } }, 1000);
+        }
+
+        window.addEventListener('beforeunload', () => { isPolling = false; if (pollInterval) { clearInterval(pollInterval); pollInterval = null; } });
+
+        document.addEventListener('DOMContentLoaded', () => { poll(); startPolling(); });
+
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            setTimeout(() => { poll(); startPolling(); }, 100);
+        }
+    </script>
+</body></html>
